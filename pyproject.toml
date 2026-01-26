@@ -1,0 +1,9 @@
+[project]
+name = "process-sketcher"
+version = "0.1.0"
+description = "A visual representation tool for complex fluid flow systems"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pygame-ce>=2.5.0",
+]
