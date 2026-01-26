@@ -1,0 +1,46 @@
+{
+  "components": [
+    {
+      "type": "pipe",
+      "id": "pipe1",
+      "position": [2, 2],
+      "end_position": [8, 2],
+      "fluid_type": "water",
+      "color": [100, 150, 255],
+      "flow_direction": "forward",
+      "diameter": 20,
+      "trim_end": true
+    },
+    {
+      "type": "connector",
+      "id": "connector1",
+      "position": [8, 2],
+      "connector_type": "elbow",
+      "color": [100, 150, 255],
+      "size": 30,
+      "rotation": 270,
+      "diameter": 20
+    },
+    {
+      "type": "pipe",
+      "id": "pipe2",
+      "position": [8, 2],
+      "end_position": [8, 6],
+      "fluid_type": "water",
+      "color": [100, 150, 255],
+      "flow_direction": "forward",
+      "diameter": 20,
+      "trim_start": true
+    },
+    {
+      "type": "pipe",
+      "id": "pipe3",
+      "position": [2, 5],
+      "end_position": [6, 5],
+      "fluid_type": "oil",
+      "color": [255, 100, 50],
+      "flow_direction": "backward",
+      "diameter": 20
+    }
+  ]
+}
