@@ -34,12 +34,15 @@ class Tee(Component):
 
     def render(self, surface, grid_size: int, offset: Tuple[int, int], time: float):
         """Render the tee fitting as a T-shape."""
+        # Calculate zoom factor (base grid size is 50)
+        zoom = grid_size / 50.0
+
         x = self.position[0] * grid_size + offset[0]
         y = self.position[1] * grid_size + offset[1]
 
         """Render a tee connector."""
         # Use the diameter to match connected pipes
-        pipe_width = self.diameter
+        pipe_width = int(self.diameter * zoom)
 
         # Calculate elbow radius based on pipe width
         # Inner radius should be large enough to look good
@@ -89,7 +92,7 @@ class Tee(Component):
         # Combine points to create closed polygon
         all_points = points_right + points_left
         all_points.append((all_points[-1][0],all_points[-1][1]+pipe_width))
-        all_points.append((all_points[1][0],all_points[-1][1]))
+        all_points.append((all_points[0][0],all_points[-1][1]))
 
         # Draw the elbow body
         pygame.draw.polygon(temp_surface, self.color, all_points)

@@ -46,6 +46,10 @@ class Pipe(Component):
 
     def render(self, surface, grid_size: int, offset: Tuple[int, int], time: float):
         """Render the pipe with animated flow arrows."""
+        # Calculate zoom factor (base grid size is 50)
+        zoom = grid_size / 50.0
+        scaled_diameter = int(self.diameter * zoom)
+
         # Calculate pixel positions
         start_x = self.position[0] * grid_size + offset[0]
         start_y = self.position[1] * grid_size + offset[1]
@@ -65,7 +69,7 @@ class Pipe(Component):
                 dir_y = dy / length
 
                 # Trim distance accounts for the inner radius of the elbow
-                trim_distance = self.diameter * 1.25
+                trim_distance = scaled_diameter * 1.25
 
                 # Apply trim at start
                 if self.trim_start:
@@ -78,18 +82,18 @@ class Pipe(Component):
                     end_y -= dir_y * trim_distance
 
         # Draw the pipe body
-        pygame.draw.line(surface, self.color, (start_x, start_y), (end_x, end_y), self.diameter)
+        pygame.draw.line(surface, self.color, (start_x, start_y), (end_x, end_y), scaled_diameter)
 
         # Draw flow indicators
         if self.flow_direction == "none":
             # Draw blinking X marks for no flow
-            self._render_blinking_marks(surface, start_x, start_y, end_x, end_y, time)
+            self._render_blinking_marks(surface, start_x, start_y, end_x, end_y, time, scaled_diameter)
         else:
             # Draw flow arrows for forward/backward flow
-            self._render_flow_arrows(surface, start_x, start_y, end_x, end_y, time)
+            self._render_flow_arrows(surface, start_x, start_y, end_x, end_y, time, scaled_diameter)
 
     def _render_flow_arrows(self, surface, start_x: float, start_y: float,
-                           end_x: float, end_y: float, time: float):
+                           end_x: float, end_y: float, time: float, scaled_diameter: int):
         """Render animated arrows showing flow direction."""
         # Calculate pipe angle and length
         dx = end_x - start_x
@@ -106,8 +110,8 @@ class Pipe(Component):
             angle += math.pi
 
         # Arrow properties
-        arrow_spacing = 50  # pixels between arrows
-        arrow_size = self.diameter * 0.6
+        arrow_spacing = scaled_diameter * 2.5  # pixels between arrows
+        arrow_size = scaled_diameter * 0.6
         animation_speed = 100  # pixels per second
 
         # Calculate animated offset (reverse direction for backward flow)
@@ -135,7 +139,7 @@ class Pipe(Component):
             self._draw_arrow(surface, arrow_x, arrow_y, angle, arrow_size)
 
     def _render_blinking_marks(self, surface, start_x: float, start_y: float,
-                              end_x: float, end_y: float, time: float):
+                              end_x: float, end_y: float, time: float, scaled_diameter: int):
         """Render blinking X marks or dots for no flow indication."""
         # Calculate pipe length
         dx = end_x - start_x
@@ -147,8 +151,8 @@ class Pipe(Component):
 
         # Blinking properties
         blink_speed = 2.0  # blinks per second
-        mark_spacing = 50  # pixels between marks
-        mark_size = self.diameter * 0.4
+        mark_spacing = scaled_diameter * 2.5  # pixels between marks
+        mark_size = scaled_diameter * 0.4
 
         # Calculate blink alpha (0 to 1)
         alpha = (math.sin(time * blink_speed * 2 * math.pi) + 1) / 2

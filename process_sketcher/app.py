@@ -805,7 +805,7 @@ class ProcessSketcherApp:
         viz_surface.fill(self.viz_bg)
 
         # Title
-        title = self.font.render("Fluid Flow Visualization", True, self.text_color)
+        title = self.font.render("P&ID Visualization", True, self.text_color)
         viz_surface.blit(title, (10, 15))
 
         # Apply pan and zoom to render offset

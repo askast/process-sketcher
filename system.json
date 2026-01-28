@@ -1,0 +1,142 @@
+{
+  "components": [
+    {
+      "type": "tank",
+      "id": "storage_tank",
+      "position": [5, 2],
+      "width": 5,
+      "height": 5,
+      "top_style": "ellipsoidal",
+      "bottom_style": "ellipsoidal",
+      "fill_percent": 50,
+      "fluids": [
+        {
+          "color": [200, 100, 50],
+          "name": "oil",
+          "percent": 0,
+          "fill_rate": 5
+        },
+        {
+          "color": [100, 150, 255],
+          "name": "water",
+          "percent": 100,
+          "drain_rate": 10
+        }
+      ]
+    },
+    {
+      "type": "pipe",
+      "id": "pipe1",
+      "position": [2, 2],
+      "end_position": [8, 2],
+      "fluid_type": "water",
+      "color": [100, 150, 255],
+      "flow_direction": "forward",
+      "diameter": 10,
+      "trim_end": true
+    },
+    {
+      "type": "elbow",
+      "id": "elbow1",
+      "position": [8, 2],
+      "connector_type": "elbow",
+      "color": [100, 150, 255],
+      "size": 30,
+      "rotation": 270,
+      "diameter": 10
+    },
+    {
+      "type": "pipe",
+      "id": "pipe2",
+      "position": [8, 2],
+      "end_position": [8, 6],
+      "fluid_type": "water",
+      "color": [100, 150, 255],
+      "flow_direction": "forward",
+      "diameter": 10,
+      "trim_start": true
+    },
+    {
+      "type": "pipe",
+      "id": "pipe3",
+      "position": [2, 5],
+      "end_position": [3, 5],
+      "fluid_type": "oil",
+      "color": [255, 100, 50],
+      "flow_direction": "backward",
+      "diameter": 10
+    },
+    {
+      "type": "pump",
+      "id": "pump1",
+      "position": [3, 5],
+      "state": "running",
+      "rotation": 0,
+      "diameter": 10
+    },
+    {
+      "type": "pipe",
+      "id": "pipe3b",
+      "position": [3, 5],
+      "end_position": [6, 5],
+      "fluid_type": "oil",
+      "color": [255, 100, 50],
+      "flow_direction": "backward",
+      "diameter": 10
+    },
+    {
+      "type": "pipe",
+      "id": "pipe4",
+      "position": [2, 7],
+      "end_position": [3, 7],
+      "fluid_type": "oil",
+      "color": [255, 100, 50],
+      "flow_direction": "none",
+      "diameter": 10
+    },
+    {
+      "type": "pipe",
+      "id": "pipe4b",
+      "position": [3, 7],
+      "end_position": [6, 7],
+      "fluid_type": "oil",
+      "color": [255, 100, 50],
+      "flow_direction": "none",
+      "diameter": 10
+    },
+    {
+      "type": "tee",
+      "id": "tee1",
+      "position": [2, 5],
+      "color": [100, 150, 255],
+      "rotation": 0,
+      "diameter": 10
+    },
+    {
+      "type": "valve",
+      "id": "valve1",
+      "position": [8, 5],
+      "state": "closed",
+      "color": [128, 128, 128],
+      "rotation": 90,
+      "diameter": 10
+    },
+    {
+      "type": "valve",
+      "id": "valve2",
+      "position": [3, 7],
+      "state": "closed",
+      "color": [128, 128, 128],
+      "rotation": 0,
+      "diameter": 10
+    },
+    {
+      "type": "pump",
+      "id": "pump1",
+      "position": [3, 5],
+      "state": "running",
+      "rotation": 0,
+      "diameter": 10
+    }
+  ]
+}

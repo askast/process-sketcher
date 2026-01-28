@@ -40,23 +40,27 @@ class Elbow(Component):
 
     def render(self, surface, grid_size: int, offset: Tuple[int, int], time: float):
         """Render the elbow."""
+        # Calculate zoom factor (base grid size is 50)
+        zoom = grid_size / 50.0
+
         x = self.position[0] * grid_size + offset[0]
         y = self.position[1] * grid_size + offset[1]
 
         if self.connector_type == "elbow":
-            self._render_elbow(surface, x, y, grid_size)
+            self._render_elbow(surface, x, y, grid_size, zoom)
         elif self.connector_type == "tee":
-            self._render_tee(surface, x, y)
+            self._render_tee(surface, x, y, zoom)
         elif self.connector_type == "cross":
-            self._render_cross(surface, x, y)
+            self._render_cross(surface, x, y, zoom)
         else:
             # Default: simple circle
-            pygame.draw.circle(surface, self.color, (int(x), int(y)), self.size // 2)
+            scaled_size = int(self.size * zoom)
+            pygame.draw.circle(surface, self.color, (int(x), int(y)), scaled_size // 2)
 
-    def _render_elbow(self, surface, x: float, y: float, grid_size: float):
+    def _render_elbow(self, surface, x: float, y: float, grid_size: float, zoom: float):
         """Render a plumbing elbow connector."""
         # Use the diameter to match connected pipes
-        pipe_width = self.diameter
+        pipe_width = int(self.diameter * zoom)
 
         # Calculate elbow radius based on pipe width
         # Inner radius should be large enough to look good
@@ -126,19 +130,21 @@ class Elbow(Component):
         # Blit to main surface
         surface.blit(rotated_surface, rotated_rect)
 
-    def _render_tee(self, surface, x: float, y: float):
+    def _render_tee(self, surface, x: float, y: float, zoom: float):
         """Render a tee connector."""
         # Simple circle for now
-        pygame.draw.circle(surface, self.color, (int(x), int(y)), self.size // 2)
+        scaled_size = int(self.size * zoom)
+        pygame.draw.circle(surface, self.color, (int(x), int(y)), scaled_size // 2)
         border_color = tuple(max(0, c - 40) for c in self.color)
-        pygame.draw.circle(surface, border_color, (int(x), int(y)), self.size // 2, 2)
+        pygame.draw.circle(surface, border_color, (int(x), int(y)), scaled_size // 2, 2)
 
-    def _render_cross(self, surface, x: float, y: float):
+    def _render_cross(self, surface, x: float, y: float, zoom: float):
         """Render a cross connector."""
         # Simple circle for now
-        pygame.draw.circle(surface, self.color, (int(x), int(y)), self.size // 2)
+        scaled_size = int(self.size * zoom)
+        pygame.draw.circle(surface, self.color, (int(x), int(y)), scaled_size // 2)
         border_color = tuple(max(0, c - 40) for c in self.color)
-        pygame.draw.circle(surface, border_color, (int(x), int(y)), self.size // 2, 2)
+        pygame.draw.circle(surface, border_color, (int(x), int(y)), scaled_size // 2, 2)
 
     def to_dict(self) -> dict:
         """Convert elbow to dictionary."""
