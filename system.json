@@ -137,6 +137,33 @@
       "state": "running",
       "rotation": 0,
       "diameter": 10
+    },
+    {
+      "type": "tee",
+      "id": "tee_dummy",
+      "position": [6, 9],
+      "color": [128, 128, 128],
+      "rotation": 0,
+      "diameter": 10
+    },
+    {
+      "type": "valve",
+      "id": "valve_dummy",
+      "position": [8, 9],
+      "state": "closed",
+      "color": [128, 128, 128],
+      "rotation": 0,
+      "diameter": 10
+    },
+    {
+      "type": "pipe",
+      "id": "pipe_dummy",
+      "position": [4, 9],
+      "end_position": [10, 9],
+      "fluid_type": "none",
+      "color": [128, 128, 128],
+      "flow_direction": "none",
+      "diameter": 10
     }
   ]
 }
