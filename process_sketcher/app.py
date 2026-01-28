@@ -27,11 +27,11 @@ class ProcessSketcherApp:
         """
         pygame.init()
         pygame.font.init()
-        pygame.scrap.init()  # Initialize clipboard support
 
         self.width = width
         self.height = height
-        self.screen = pygame.display.set_mode((width, height))
+        self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+        pygame.scrap.init()  # Initialize clipboard support
         pygame.display.set_caption("P&ID Animator")
 
         # Pane layout (left = JSON editor, right = visualization)
@@ -241,6 +241,11 @@ class ProcessSketcherApp:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
+
+            elif event.type == pygame.VIDEORESIZE:
+                self.width, self.height = event.size
+                self.screen = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
+                self.viz_width = self.width - self.editor_width
 
             elif event.type == pygame.KEYDOWN:
                 self._handle_keydown(event)
