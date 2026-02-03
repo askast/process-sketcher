@@ -214,7 +214,7 @@ class Pipe(Component):
 
     def to_dict(self) -> dict:
         """Convert pipe to dictionary."""
-        return {
+        data = {
             "type": "pipe",
             "id": self.id,
             "position": list(self.position),
@@ -226,11 +226,12 @@ class Pipe(Component):
             "trim_start": self.trim_start,
             "trim_end": self.trim_end
         }
+        return self._add_animation_to_dict(data)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Pipe':
         """Create pipe from dictionary."""
-        return cls(
+        component = cls(
             position=tuple(data["position"]),
             end_position=tuple(data["end_position"]),
             fluid_type=data.get("fluid_type", "water"),
@@ -241,3 +242,6 @@ class Pipe(Component):
             trim_start=data.get("trim_start", False),
             trim_end=data.get("trim_end", False)
         )
+        if 'animation' in data:
+            component.set_animation(data['animation'])
+        return component

@@ -148,7 +148,7 @@ class Elbow(Component):
 
     def to_dict(self) -> dict:
         """Convert elbow to dictionary."""
-        return {
+        data = {
             "type": "elbow",
             "id": self.id,
             "position": list(self.position),
@@ -158,11 +158,12 @@ class Elbow(Component):
             "rotation": self.rotation,
             "diameter": self.diameter
         }
+        return self._add_animation_to_dict(data)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Elbow':
         """Create elbow from dictionary."""
-        return cls(
+        component = cls(
             position=tuple(data["position"]),
             connector_type=data.get("connector_type", "elbow"),
             color=tuple(data.get("color", [100, 150, 255])),
@@ -171,3 +172,6 @@ class Elbow(Component):
             rotation=data.get("rotation", 270),
             diameter=data.get("diameter", 20)
         )
+        if 'animation' in data:
+            component.set_animation(data['animation'])
+        return component

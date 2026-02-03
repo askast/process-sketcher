@@ -231,7 +231,7 @@ class Tank(Component):
 
     def to_dict(self) -> dict:
         """Convert tank to dictionary."""
-        return {
+        data = {
             "type": "tank",
             "id": self.id,
             "position": list(self.position),
@@ -243,11 +243,12 @@ class Tank(Component):
             "fill_percent": self.initial_fill_percent,
             "wall_thickness": self.wall_thickness
         }
+        return self._add_animation_to_dict(data)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Tank':
         """Create tank from dictionary."""
-        return cls(
+        component = cls(
             position=tuple(data["position"]),
             width=data.get("width", 3),
             height=data.get("height", 4),
@@ -258,3 +259,6 @@ class Tank(Component):
             component_id=data.get("id"),
             wall_thickness=data.get("wall_thickness", 3)
         )
+        if 'animation' in data:
+            component.set_animation(data['animation'])
+        return component

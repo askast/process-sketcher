@@ -120,7 +120,7 @@ class Tee(Component):
 
     def to_dict(self) -> dict:
         """Convert tee to dictionary."""
-        return {
+        data = {
             "type": "tee",
             "id": self.id,
             "position": list(self.position),
@@ -128,14 +128,18 @@ class Tee(Component):
             "rotation": self.rotation,
             "diameter": self.diameter
         }
+        return self._add_animation_to_dict(data)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Tee':
         """Create tee from dictionary."""
-        return cls(
+        component = cls(
             position=tuple(data["position"]),
             color=tuple(data.get("color", [100, 150, 255])),
             component_id=data.get("id"),
             rotation=data.get("rotation", 0),
             diameter=data.get("diameter", 20)
         )
+        if 'animation' in data:
+            component.set_animation(data['animation'])
+        return component

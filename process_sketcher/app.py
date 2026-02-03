@@ -14,8 +14,8 @@ from .json_loader import JSONLoader
 class ProcessSketcherApp:
     """Main application class for P&ID Animator."""
 
-    # Config file path
-    CONFIG_FILE = Path.home() / ".process_sketcher_config.json"
+    # Default system file
+    SYSTEM_FILE = Path.cwd() / "system.json"
 
     def __init__(self, width: int = 1600, height: int = 900):
         """
@@ -27,6 +27,7 @@ class ProcessSketcherApp:
         """
         pygame.init()
         pygame.font.init()
+        pygame.key.set_repeat(400, 30)  # Enable key repeat (400ms delay, 30ms interval)
 
         self.width = width
         self.height = height
@@ -112,38 +113,17 @@ class ProcessSketcherApp:
         except Exception as e:
             self.error_message = str(e)
 
-    def _load_config(self) -> dict:
-        """Load configuration from file."""
-        if self.CONFIG_FILE.exists():
-            try:
-                with open(self.CONFIG_FILE, 'r') as f:
-                    return json.load(f)
-            except Exception:
-                return {}
-        return {}
-
-    def _save_config(self, config: dict):
-        """Save configuration to file."""
-        try:
-            with open(self.CONFIG_FILE, 'w') as f:
-                json.dump(config, f, indent=2)
-        except Exception as e:
-            print(f"Error saving config: {e}")
-
     def _load_from_last_file(self):
-        """Load JSON from the last used file, or use example if none."""
-        config = self._load_config()
-        last_file = config.get('last_file')
-
-        if last_file and Path(last_file).exists():
+        """Load JSON from system.json, or use example if not found."""
+        if self.SYSTEM_FILE.exists():
             try:
-                self.current_file = Path(last_file)
+                self.current_file = self.SYSTEM_FILE
                 with open(self.current_file, 'r') as f:
                     self.json_text = f.read()
                 self.json_lines = self.json_text.split('\n')
                 return
             except Exception as e:
-                print(f"Error loading last file: {e}")
+                print(f"Error loading system.json: {e}")
 
         # Fall back to example
         self.json_text = JSONLoader.get_example_json()
@@ -154,16 +134,11 @@ class ProcessSketcherApp:
         """Save current JSON to file."""
         if self.current_file is None:
             # Default to current directory with a default name
-            self.current_file = Path.cwd() / "system.json"
+            self.current_file = self.SYSTEM_FILE
 
         try:
             with open(self.current_file, 'w') as f:
                 f.write(self.json_text)
-
-            # Save to config
-            config = self._load_config()
-            config['last_file'] = str(self.current_file)
-            self._save_config(config)
 
             # Clear any errors
             self.error_message = None
@@ -809,19 +784,21 @@ class ProcessSketcherApp:
         viz_surface = pygame.Surface((self.viz_width, self.height))
         viz_surface.fill(self.viz_bg)
 
-        # Title
-        title = self.font.render("P&ID Visualization", True, self.text_color)
-        viz_surface.blit(title, (10, 15))
-
         # Apply pan and zoom to render offset
         render_offset = (self.viz_pan_x, self.viz_pan_y)
 
-        # Render grid with zoom
+        # Render grid with zoom (behind everything else)
         self._render_grid_with_zoom(viz_surface, render_offset)
+
+        # Title (rendered after grid so it appears on top)
+        title = self.font.render("P&ID Visualization", True, self.text_color)
+        viz_surface.blit(title, (10, 15))
 
         # Render components with zoom
         for component in self.components:
+            original_values = component.apply_animation(self.time)
             component.render(viz_surface, self.grid.cell_size * self.viz_zoom, render_offset, self.time)
+            component.restore_properties(original_values)
 
         # Component count and zoom info
         count_text = self.small_font.render(

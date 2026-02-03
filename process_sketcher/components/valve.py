@@ -176,7 +176,7 @@ class Valve(Component):
 
     def to_dict(self) -> dict:
         """Convert valve to dictionary."""
-        return {
+        data = {
             "type": "valve",
             "id": self.id,
             "position": list(self.position),
@@ -185,11 +185,12 @@ class Valve(Component):
             "rotation": self.rotation,
             "diameter": self.diameter
         }
+        return self._add_animation_to_dict(data)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Valve':
         """Create valve from dictionary."""
-        return cls(
+        component = cls(
             position=tuple(data["position"]),
             state=data.get("state", "open"),
             color=tuple(data.get("color", [128, 128, 128])),
@@ -197,3 +198,6 @@ class Valve(Component):
             rotation=data.get("rotation", 0),
             diameter=data.get("diameter", 20)
         )
+        if 'animation' in data:
+            component.set_animation(data['animation'])
+        return component

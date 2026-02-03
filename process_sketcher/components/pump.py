@@ -89,9 +89,8 @@ class Pump(Component):
         pygame.draw.rect(temp_surface, self.color, right_pipe_rect)
         pygame.draw.rect(temp_surface, border_color, right_pipe_rect, 2)
 
-        # If running, draw spinning fan/impeller
-        if self.state == "running":
-            self._draw_spinning_fan(temp_surface, surf_center_x, surf_center_y, time, pipe_width)
+        # Draw fan/impeller (spinning if running, static if stopped)
+        self._draw_fan(temp_surface, surf_center_x, surf_center_y, time, pipe_width)
 
         # Rotate the surface
         rotated_surface = pygame.transform.rotate(temp_surface, -self.rotation)
@@ -102,16 +101,31 @@ class Pump(Component):
         # Blit to main surface
         surface.blit(rotated_surface, rotated_rect)
 
-    def _draw_spinning_fan(self, surface, center_x: int, center_y: int, time: float, scaled_diameter: int):
-        """Draw a spinning fan/impeller in the pump center."""
-        # Rotation speed (revolutions per second)
-        rotation_speed = 0.25  # 2 revolutions per second
+    def _draw_fan(self, surface, center_x: int, center_y: int, time: float, scaled_diameter: int):
+        """Draw fan/impeller in the pump center (spinning if running, static if stopped)."""
+        # Calculate rotation angle - only animate if running
+        if self.state == "running":
+            rotation_speed = 0.25  # revolutions per second
+            angle_offset = (time * rotation_speed * 2 * math.pi) % (2 * math.pi)
+            fan_color = (50, 150, 200)  # Blue color for fan when running
+            hub_border_color = (30, 100, 150)
+        else:
+            angle_offset = 0  # Static position when stopped
+            # Flash red when stopped
+            blink_speed = 2.0  # blinks per second
+            alpha = (math.sin(time * blink_speed * 2 * math.pi) + 1) / 2
+            # Interpolate between blue and red based on alpha
+            fan_color = (
+                int(50 + (255 - 50) * alpha),
+                int(150 - 100 * alpha),
+                int(200 - 150 * alpha)
+            )
+            hub_border_color = (
+                int(30 + (200 - 30) * alpha),
+                int(100 - 70 * alpha),
+                int(150 - 120 * alpha)
+            )
 
-        # Calculate rotation angle
-        angle_offset = (time * rotation_speed * 2 * math.pi) % (2 * math.pi)
-
-        # Fan properties
-        fan_color = (50, 150, 200)  # Blue color for fan
         num_blades = 4
         blade_length = scaled_diameter * 0.8
         blade_width = scaled_diameter * 0.15
@@ -144,12 +158,11 @@ class Pump(Component):
         pygame.draw.circle(surface, fan_color, (center_x, center_y), hub_radius)
 
         # Draw hub border
-        hub_border_color = (30, 100, 150)
         pygame.draw.circle(surface, hub_border_color, (center_x, center_y), hub_radius, 2)
 
     def to_dict(self) -> dict:
         """Convert pump to dictionary."""
-        return {
+        data = {
             "type": "pump",
             "id": self.id,
             "position": list(self.position),
@@ -158,11 +171,12 @@ class Pump(Component):
             "rotation": self.rotation,
             "diameter": self.diameter
         }
+        return self._add_animation_to_dict(data)
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Pump':
         """Create pump from dictionary."""
-        return cls(
+        component = cls(
             position=tuple(data["position"]),
             state=data.get("state", "stopped"),
             color=tuple(data.get("color", [128, 128, 128])),
@@ -170,3 +184,6 @@ class Pump(Component):
             rotation=data.get("rotation", 0),
             diameter=data.get("diameter", 20)
         )
+        if 'animation' in data:
+            component.set_animation(data['animation'])
+        return component
