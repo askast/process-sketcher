@@ -59,35 +59,47 @@ class Pump(Component):
         surf_center_x = pump_width // 2
         surf_center_y = pump_height // 2
 
-        # Draw pump body - a circle
-        pygame.draw.circle(temp_surface, self.color, (surf_center_x, surf_center_y), pump_body_diameter // 2)
+        # Build pump body as polygon with curved top/bottom and straight pipe connections
+        points_top = []
+        points_bottom = []
+        points_left_pipe = []
+        points_right_pipe = []
+        num_segments = 20
 
-        # Draw border
+        for i in range(num_segments + 1):
+            # Top arc
+            start_angle = (2*math.pi)-math.acos(pipe_width/pump_body_diameter)
+            end_angle = (2*math.pi)+math.acos(pipe_width/pump_body_diameter)
+            angle = start_angle+(end_angle-start_angle) * i / num_segments
+            ix = surf_center_x + pump_body_diameter * math.sin(angle)//2
+            iy = surf_center_y - pump_body_diameter * math.cos(angle)//2
+            points_top.append((ix, iy))
+
+        for i in range(num_segments + 1):
+            # Bottom arc
+            start_angle = (math.pi)-math.acos(pipe_width/pump_body_diameter)
+            end_angle = (math.pi)+math.acos(pipe_width/pump_body_diameter)
+            angle = start_angle+(end_angle-start_angle) * i / num_segments
+            ix = surf_center_x + pump_body_diameter * math.sin(angle)//2
+            iy = surf_center_y - pump_body_diameter * math.cos(angle)//2
+            points_bottom.append((ix, iy))  
+
+        # Left pipe connection points
+        points_left_pipe.append((points_bottom[-1][0]-pipe_width, points_bottom[-1][1]))
+        points_left_pipe.append((points_left_pipe[-1][0], points_top[0][1]))
+
+        # Right pipe connection points
+        points_right_pipe.append((points_top[-1][0]+pipe_width, points_top[-1][1]))
+        points_right_pipe.append((points_right_pipe[-1][0], points_bottom[0][1]))
+
+        all_points = points_top + points_right_pipe + points_bottom + points_left_pipe
+
+        # Draw the pump body
+        pygame.draw.polygon(temp_surface, self.color, all_points)
+
+        # Draw border/outline
         border_color = tuple(max(0, c - 40) for c in self.color)
-        pygame.draw.circle(temp_surface, border_color, (surf_center_x, surf_center_y), pump_body_diameter // 2, 2)
-
-        # Draw inlet/outlet pipes on the pump
-        pipe_length = pipe_width
-
-        # Left pipe (inlet)
-        left_pipe_rect = pygame.Rect(
-            surf_center_x - pump_body_diameter // 2 - pipe_length,
-            surf_center_y - pipe_width // 2,
-            pipe_length,
-            pipe_width
-        )
-        pygame.draw.rect(temp_surface, self.color, left_pipe_rect)
-        pygame.draw.rect(temp_surface, border_color, left_pipe_rect, 2)
-
-        # Right pipe (outlet)
-        right_pipe_rect = pygame.Rect(
-            surf_center_x + pump_body_diameter // 2,
-            surf_center_y - pipe_width // 2,
-            pipe_length,
-            pipe_width
-        )
-        pygame.draw.rect(temp_surface, self.color, right_pipe_rect)
-        pygame.draw.rect(temp_surface, border_color, right_pipe_rect, 2)
+        pygame.draw.polygon(temp_surface, border_color, all_points, 2)
 
         # Draw fan/impeller (spinning if running, static if stopped)
         self._draw_fan(temp_surface, surf_center_x, surf_center_y, time, pipe_width)
