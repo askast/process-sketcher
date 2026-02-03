@@ -418,6 +418,8 @@ class ProcessSketcherApp:
                         # Get clipboard text
                         clipboard_text = pygame.scrap.get_text()
                         if clipboard_text:
+                            # Normalize line endings (remove Windows carriage returns)
+                            clipboard_text = clipboard_text.replace('\r', '')
                             # Insert at cursor
                             clipboard_lines = clipboard_text.split('\n')
                             if len(clipboard_lines) == 1:

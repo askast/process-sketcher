@@ -114,19 +114,20 @@ class Pipe(Component):
         arrow_size = scaled_diameter * 0.6
         animation_speed = 100  # pixels per second
 
-        # Calculate animated offset (reverse direction for backward flow)
+        # Calculate animated offset
         anim_offset = (time * animation_speed) % arrow_spacing
 
         # Draw multiple arrows along the pipe
         num_arrows = int(length / arrow_spacing) + 2
         for i in range(num_arrows):
             # Calculate arrow position along the pipe
-            # For forward flow: arrows move from start to end (add offset)
-            # For backward flow: arrows move from end to start (subtract offset)
+            # For forward flow: arrows move from start to end
+            # For backward flow: arrows move from end to start (reverse offset)
             if self.flow_direction == "forward":
                 distance = i * arrow_spacing + anim_offset
             else:
-                distance = i * arrow_spacing - anim_offset
+                # Reverse animation direction for backward flow
+                distance = i * arrow_spacing + (arrow_spacing - anim_offset)
 
             if distance < 0 or distance > length:
                 continue
