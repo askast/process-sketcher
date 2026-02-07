@@ -71,7 +71,7 @@
       "state": "running",
       "color": [100, 100, 120],
       "rotation": 0,
-      "diameter": 15
+      "diameter": 10
     },
     {
       "type": "pump",
@@ -80,7 +80,7 @@
       "state": "stopped",
       "color": [100, 100, 120],
       "rotation": 0,
-      "diameter": 15
+      "diameter": 10
     },
     {
       "type": "pump",
@@ -89,7 +89,7 @@
       "state": "stopped",
       "color": [100, 100, 120],
       "rotation": 0,
-      "diameter": 15,
+      "diameter": 10,
       "animation": [
         {"duration": 4, "state": "running"},
         {"duration": 2, "state": "stopped"},
@@ -104,7 +104,7 @@
       "state": "open",
       "color": [100, 150, 100],
       "rotation": 0,
-      "diameter": 15
+      "diameter": 10
     },
     {
       "type": "valve",
@@ -113,7 +113,7 @@
       "state": "closed",
       "color": [150, 100, 100],
       "rotation": 0,
-      "diameter": 15
+      "diameter": 10
     },
     {
       "type": "valve",
@@ -122,7 +122,7 @@
       "state": "open",
       "color": [100, 100, 150],
       "rotation": 0,
-      "diameter": 15,
+      "diameter": 10,
       "animation": [
         {"duration": 3, "state": "open"},
         {"duration": 2, "state": "closed"}
@@ -135,7 +135,7 @@
       "state": "open",
       "color": [150, 150, 100],
       "rotation": 90,
-      "diameter": 15
+      "diameter": 10
     },
 
     {
@@ -145,7 +145,7 @@
       "end_position": [5, 13],
       "color": [100, 150, 255],
       "flow_direction": "forward",
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "pipe",
@@ -154,7 +154,7 @@
       "end_position": [9, 13],
       "color": [200, 100, 50],
       "flow_direction": "backward",
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "pipe",
@@ -163,7 +163,7 @@
       "end_position": [13, 13],
       "color": [128, 128, 128],
       "flow_direction": "none",
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "pipe",
@@ -172,7 +172,7 @@
       "end_position": [6, 15],
       "color": [150, 100, 200],
       "flow_direction": "forward",
-      "diameter": 12,
+      "diameter": 10,
       "animation": [
         {"duration": 3, "flow_direction": "forward"},
         {"duration": 1, "flow_direction": "none"},
@@ -187,7 +187,7 @@
       "end_position": [8, 17],
       "color": [100, 200, 150],
       "flow_direction": "forward",
-      "diameter": 12
+      "diameter": 10
     },
 
     {
@@ -197,7 +197,7 @@
       "connector_type": "elbow",
       "color": [100, 150, 255],
       "rotation": 0,
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "elbow",
@@ -206,7 +206,7 @@
       "connector_type": "elbow",
       "color": [100, 150, 255],
       "rotation": 90,
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "elbow",
@@ -215,7 +215,7 @@
       "connector_type": "elbow",
       "color": [100, 150, 255],
       "rotation": 180,
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "elbow",
@@ -224,7 +224,7 @@
       "connector_type": "elbow",
       "color": [100, 150, 255],
       "rotation": 270,
-      "diameter": 12
+      "diameter": 10
     },
 
     {
@@ -233,7 +233,7 @@
       "position": [10, 18],
       "color": [200, 150, 100],
       "rotation": 0,
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "tee",
@@ -241,7 +241,7 @@
       "position": [12, 18],
       "color": [200, 150, 100],
       "rotation": 90,
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "tee",
@@ -249,7 +249,7 @@
       "position": [14, 18],
       "color": [200, 150, 100],
       "rotation": 180,
-      "diameter": 12
+      "diameter": 10
     },
     {
       "type": "tee",
@@ -257,7 +257,7 @@
       "position": [16, 18],
       "color": [200, 150, 100],
       "rotation": 270,
-      "diameter": 12
+      "diameter": 10
     },
 
     {
@@ -319,7 +319,7 @@
       "connector_type": "elbow",
       "color": [100, 150, 255],
       "rotation": 0,
-      "diameter": 15,
+      "diameter": 10,
       "animation": [
         {"duration": 1, "color": [255, 100, 100]},
         {"duration": 1, "color": [100, 255, 100]},
@@ -334,7 +334,7 @@
       "state": "running",
       "color": [150, 100, 100],
       "rotation": 90,
-      "diameter": 15
+      "diameter": 10
     },
     {
       "type": "pump",
@@ -343,6 +343,47 @@
       "state": "running",
       "color": [150, 100, 100],
       "rotation": 0,
+      "diameter": 10
+    },
+
+    {
+      "type": "three_way_valve",
+      "id": "three_way_base",
+      "position": [15, 13],
+      "state": "base",
+      "color": [100, 150, 100],
+      "rotation": 0,
+      "diameter": 15
+    },
+    {
+      "type": "three_way_valve",
+      "id": "three_way_flipped",
+      "position": [18, 13],
+      "state": "flipped",
+      "color": [150, 100, 100],
+      "rotation": 0,
+      "diameter": 15
+    },
+    {
+      "type": "three_way_valve",
+      "id": "three_way_animated",
+      "position": [15, 16],
+      "state": "base",
+      "color": [100, 100, 150],
+      "rotation": 0,
+      "diameter": 15,
+      "animation": [
+        {"duration": 2, "state": "base"},
+        {"duration": 2, "state": "flipped"}
+      ]
+    },
+    {
+      "type": "three_way_valve",
+      "id": "three_way_rotated",
+      "position": [18, 16],
+      "state": "base",
+      "color": [150, 150, 100],
+      "rotation": 90,
       "diameter": 15
     }
   ]

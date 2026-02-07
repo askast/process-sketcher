@@ -90,6 +90,12 @@ class ProcessSketcherApp:
         self.selection_end = None    # (line, col) or None
         self.editor_mouse_down = False
 
+        # Scrollbar
+        self.scrollbar_width = 12
+        self.scrollbar_dragging = False
+        self.scrollbar_drag_start_y = 0
+        self.scrollbar_drag_start_offset = 0
+
         # Animation
         self.clock = pygame.time.Clock()
         self.time = 0.0
@@ -236,6 +242,9 @@ class ProcessSketcherApp:
                     # Check if clicking save button
                     elif self.save_button_rect.collidepoint(event.pos):
                         self._save_to_file()
+                    # Check if clicking on scrollbar
+                    elif self._handle_scrollbar_click(event.pos):
+                        pass  # Handled by scrollbar
                     # Check if clicking in visualization area
                     elif event.pos[0] >= self.editor_width + self.divider_width:
                         self.viz_dragging = True
@@ -273,6 +282,7 @@ class ProcessSketcherApp:
                     self.divider_dragging = False
                     self.viz_dragging = False
                     self.editor_mouse_down = False
+                    self.scrollbar_dragging = False
 
             elif event.type == pygame.MOUSEMOTION:
                 # Update button hover states
@@ -301,6 +311,21 @@ class ProcessSketcherApp:
                     self.viz_pan_x += dx
                     self.viz_pan_y += dy
                     self.viz_drag_start = event.pos
+
+                # Handle scrollbar dragging
+                elif self.scrollbar_dragging:
+                    track_rect = self._get_scrollbar_track_rect()
+                    total_lines = len(self.json_lines)
+                    visible_lines = 35
+                    max_scroll = total_lines - visible_lines
+
+                    if max_scroll > 0 and track_rect is not None:
+                        thumb_height = max(30, int(track_rect.height * visible_lines / total_lines))
+                        drag_range = track_rect.height - thumb_height
+                        dy = event.pos[1] - self.scrollbar_drag_start_y
+                        scroll_delta = int((dy / drag_range) * max_scroll) if drag_range > 0 else 0
+                        self.scroll_offset = self.scrollbar_drag_start_offset + scroll_delta
+                        self.scroll_offset = max(0, min(max_scroll, self.scroll_offset))
 
                 # Handle text selection dragging
                 elif self.editor_mouse_down and event.pos[0] < self.editor_width:
@@ -646,6 +671,35 @@ class ProcessSketcherApp:
         self.cursor_line = clicked_line
         self.cursor_col = clicked_col
 
+    def _handle_scrollbar_click(self, pos) -> bool:
+        """Handle click on scrollbar. Returns True if click was on scrollbar."""
+        thumb_rect = self._get_scrollbar_rect()
+        if thumb_rect is None:
+            return False
+
+        track_rect = self._get_scrollbar_track_rect()
+
+        # Check if clicking on thumb
+        if thumb_rect.collidepoint(pos):
+            self.scrollbar_dragging = True
+            self.scrollbar_drag_start_y = pos[1]
+            self.scrollbar_drag_start_offset = self.scroll_offset
+            return True
+
+        # Check if clicking on track (jump to position)
+        if track_rect.collidepoint(pos):
+            total_lines = len(self.json_lines)
+            visible_lines = 35
+            max_scroll = total_lines - visible_lines
+
+            # Calculate scroll position from click
+            track_click_ratio = (pos[1] - track_rect.y) / track_rect.height
+            self.scroll_offset = int(track_click_ratio * max_scroll)
+            self.scroll_offset = max(0, min(max_scroll, self.scroll_offset))
+            return True
+
+        return False
+
     def render(self):
         """Render the entire UI."""
         self.screen.fill(self.bg_color)
@@ -758,6 +812,9 @@ class ProcessSketcherApp:
 
             y += line_height
 
+        # Scrollbar
+        self._render_scrollbar(editor_surface, text_start_y, line_height)
+
         # Current file info
         file_y = self.height - 150
         if self.current_file:
@@ -780,6 +837,65 @@ class ProcessSketcherApp:
             editor_surface.blit(inst_text, (10, inst_y + i * 25))
 
         self.screen.blit(editor_surface, (0, 0))
+
+    def _render_scrollbar(self, surface, text_start_y: int, line_height: int):
+        """Render the vertical scrollbar for the editor."""
+        total_lines = len(self.json_lines)
+        visible_lines = 35
+
+        if total_lines <= visible_lines:
+            return  # No scrollbar needed
+
+        # Scrollbar track area
+        track_x = self.editor_width - self.scrollbar_width - 5
+        track_y = text_start_y
+        track_height = self.height - text_start_y - 160  # Leave space for file info
+
+        # Draw track background
+        track_color = (40, 40, 45)
+        pygame.draw.rect(surface, track_color,
+                        (track_x, track_y, self.scrollbar_width, track_height),
+                        border_radius=4)
+
+        # Calculate thumb size and position
+        thumb_height = max(30, int(track_height * visible_lines / total_lines))
+        max_scroll = total_lines - visible_lines
+        scroll_ratio = self.scroll_offset / max_scroll if max_scroll > 0 else 0
+        thumb_y = track_y + int((track_height - thumb_height) * scroll_ratio)
+
+        # Draw thumb
+        thumb_color = (100, 100, 110) if not self.scrollbar_dragging else (130, 130, 140)
+        pygame.draw.rect(surface, thumb_color,
+                        (track_x, thumb_y, self.scrollbar_width, thumb_height),
+                        border_radius=4)
+
+    def _get_scrollbar_rect(self):
+        """Get the scrollbar thumb rectangle for hit testing."""
+        text_start_y = 90 if self.error_message else 60
+        total_lines = len(self.json_lines)
+        visible_lines = 35
+
+        if total_lines <= visible_lines:
+            return None
+
+        track_x = self.editor_width - self.scrollbar_width - 5
+        track_y = text_start_y
+        track_height = self.height - text_start_y - 160
+
+        thumb_height = max(30, int(track_height * visible_lines / total_lines))
+        max_scroll = total_lines - visible_lines
+        scroll_ratio = self.scroll_offset / max_scroll if max_scroll > 0 else 0
+        thumb_y = track_y + int((track_height - thumb_height) * scroll_ratio)
+
+        return pygame.Rect(track_x, thumb_y, self.scrollbar_width, thumb_height)
+
+    def _get_scrollbar_track_rect(self):
+        """Get the scrollbar track rectangle."""
+        text_start_y = 90 if self.error_message else 60
+        track_x = self.editor_width - self.scrollbar_width - 5
+        track_y = text_start_y
+        track_height = self.height - text_start_y - 160
+        return pygame.Rect(track_x, track_y, self.scrollbar_width, track_height)
 
     def _render_viz_pane(self):
         """Render the visualization pane."""
