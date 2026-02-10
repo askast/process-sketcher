@@ -44,6 +44,11 @@ class Tank(Component):
         self.fill_percent = self.initial_fill_percent
         self.wall_thickness = wall_thickness
 
+        # Top-level fill/drain rates (can be animated via keyframes)
+        # Use fill_rate/drain_rate for first fluid, or fill_rate_<name>/drain_rate_<name> for specific fluids
+        self.fill_rate: Optional[float] = None
+        self.drain_rate: Optional[float] = None
+
         # Default to single water layer if no fluids specified
         if fluids is None:
             self.fluids = [
@@ -64,6 +69,14 @@ class Tank(Component):
 
         # Normalize fluid percentages
         self._normalize_fluid_percentages()
+
+        # Create dynamic attributes for each fluid's fill/drain rates (for animation support)
+        # This allows keyframes like {"fill_rate_water": 10, "drain_rate_oil": 5}
+        for fluid in self.fluids:
+            fluid_name = fluid.get("name", "")
+            if fluid_name:
+                setattr(self, f"fill_rate_{fluid_name}", None)
+                setattr(self, f"drain_rate_{fluid_name}", None)
 
         # Animation tracking
         self.last_update_time = 0.0
@@ -90,9 +103,28 @@ class Tank(Component):
 
         # Update each fluid level based on their individual rates
         # fluid["percent"] represents the percentage of TANK capacity this fluid occupies
-        for fluid in self.fluids:
-            drain_rate = fluid.get("drain_rate", 0.0)
-            fill_rate = fluid.get("fill_rate", 0.0)
+        for i, fluid in enumerate(self.fluids):
+            fluid_name = fluid.get("name", "")
+
+            # Check for fluid-specific rates (e.g., fill_rate_water, drain_rate_oil)
+            specific_fill_rate = getattr(self, f"fill_rate_{fluid_name}", None) if fluid_name else None
+            specific_drain_rate = getattr(self, f"drain_rate_{fluid_name}", None) if fluid_name else None
+
+            # Priority: fluid-specific rate > top-level rate (first fluid only) > per-fluid rate
+            if specific_fill_rate is not None:
+                fill_rate = specific_fill_rate
+            elif i == 0 and self.fill_rate is not None:
+                fill_rate = self.fill_rate
+            else:
+                fill_rate = fluid.get("fill_rate", 0.0)
+
+            if specific_drain_rate is not None:
+                drain_rate = specific_drain_rate
+            elif i == 0 and self.drain_rate is not None:
+                drain_rate = self.drain_rate
+            else:
+                drain_rate = fluid.get("drain_rate", 0.0)
+
             net_rate = fill_rate - drain_rate
 
             # Update the fluid's absolute percentage of tank capacity

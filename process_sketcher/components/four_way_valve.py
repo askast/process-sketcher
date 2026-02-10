@@ -81,51 +81,6 @@ class FourWayValve(Component):
         points.append((surf_center_x + grid_size/2 - pipe_width*0.5, surf_center_y+(pipe_width*2)))
         points.append((surf_center_x + grid_size/2 - pipe_width*0.5, surf_center_y+(pipe_width)))
 
-        # # Calculate H shape points
-        # half_width = h_width // 2
-        # half_height = h_height // 2
-        # half_pipe = pipe_width // 2
-
-        # # Left vertical bar of H
-        # left_bar_left = surf_center_x - half_width - half_pipe
-        # left_bar_right = surf_center_x - half_width + half_pipe
-
-        # # Right vertical bar of H
-        # right_bar_left = surf_center_x + half_width - half_pipe
-        # right_bar_right = surf_center_x + half_width + half_pipe
-
-        # # Vertical extents
-        # top = surf_center_y - half_height - half_pipe
-        # bottom = surf_center_y + half_height + half_pipe
-
-        # # Bridge extents
-        # bridge_top = surf_center_y - half_pipe
-        # bridge_bottom = surf_center_y + half_pipe
-
-        # # Build the H shape as a polygon
-        # # Start from top-left corner and go clockwise
-        # points = [
-        #     # Left bar - top
-        #     (left_bar_left, top),
-        #     (left_bar_right, top),
-        #     # Left bar - upper part to bridge
-        #     (left_bar_right, bridge_top),
-        #     # Bridge - top
-        #     (right_bar_left, bridge_top),
-        #     # Right bar - upper part from bridge
-        #     (right_bar_left, top),
-        #     (right_bar_right, top),
-        #     # Right bar - right side down
-        #     (right_bar_right, bottom),
-        #     (right_bar_left, bottom),
-        #     # Right bar - lower part to bridge
-        #     (right_bar_left, bridge_bottom),
-        #     # Bridge - bottom
-        #     (left_bar_right, bridge_bottom),
-        #     # Left bar - lower part from bridge
-        #     (left_bar_right, bottom),
-        #     (left_bar_left, bottom),
-        # ]
 
         # Draw the H body
         pygame.draw.polygon(temp_surface, self.color, points)

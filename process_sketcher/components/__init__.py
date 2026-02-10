@@ -10,5 +10,6 @@ from .pump import Pump
 from .three_way_valve import ThreeWayValve
 from .four_way_valve import FourWayValve
 from .sensor import Sensor
+from .heat_exchanger import HeatExchanger
 
-__all__ = ["Component", "Pipe", "Elbow", "Tank", "Tee", "Valve", "Pump", "ThreeWayValve", "FourWayValve", "Sensor"]
+__all__ = ["Component", "Pipe", "Elbow", "Tank", "Tee", "Valve", "Pump", "ThreeWayValve", "FourWayValve", "Sensor", "HeatExchanger"]

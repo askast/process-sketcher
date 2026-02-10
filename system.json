@@ -67,6 +67,34 @@
         }
       ]
     },
+    {
+      "type": "tank",
+      "id": "tank_animated",
+      "position": [15, 1],
+      "width": 3,
+      "height": 4,
+      "top_style": "flat",
+      "bottom_style": "ellipsoidal",
+      "fill_percent": 50,
+      "fluids": [
+        {
+          "color": [200, 100, 50],
+          "name": "oil",
+          "percent": 50
+        },
+        {
+          "color": [100, 150, 255],
+          "name": "water",
+          "percent": 50
+        }
+      ],
+      "label_text": "T-103",
+      "animation": [
+        {"duration": 4, "fill_rate_water": 8},
+        {"duration": 4, "drain_rate_water": 8, "fill_rate_oil": 5},
+        {"duration": 4, "drain_rate_oil": 5}
+      ]
+    },
 
     {
       "type": "pump",
@@ -509,6 +537,24 @@
       "color": [100, 150, 200],
       "rotation": 90,
       "diameter": 15
+    },
+
+    {
+      "type": "heat_exchanger",
+      "id": "heat_exchanger_1",
+      "position": [2, 20],
+      "color": [180, 100, 60],
+      "rotation": 0,
+      "diameter": 12,
+      "label_text": "HX-101"
+    },
+    {
+      "type": "heat_exchanger",
+      "id": "heat_exchanger_rotated",
+      "position": [2, 23],
+      "color": [100, 150, 180],
+      "rotation": 90,
+      "diameter": 12
     }
   ]
 }
