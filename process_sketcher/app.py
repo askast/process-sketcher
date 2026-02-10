@@ -918,6 +918,9 @@ class ProcessSketcherApp:
             component.render(viz_surface, self.grid.cell_size * self.viz_zoom, render_offset, self.time)
             component.restore_properties(original_values)
 
+        # Render component labels on top
+        self._render_component_labels(viz_surface, render_offset)
+
         # Component count and zoom info
         count_text = self.small_font.render(
             f"Components: {len(self.components)} | Zoom: {self.viz_zoom:.2f}x",
@@ -972,6 +975,54 @@ class ProcessSketcherApp:
                 num_text = self.small_font.render(str(grid_y), True, number_color)
                 surface.blit(num_text, (2, y + 2))
             grid_y += 1
+
+    def _render_component_labels(self, surface, offset):
+        """Render labels for all components."""
+        grid_size = int(self.grid.cell_size * self.viz_zoom)
+        label_color = (200, 200, 200)
+        label_bg_color = (40, 40, 45, 180)  # Semi-transparent background
+
+        # Create a font for labels
+        try:
+            label_font = pygame.font.SysFont("Arial", max(10, int(12 * self.viz_zoom)))
+        except:
+            label_font = pygame.font.Font(None, max(10, int(14 * self.viz_zoom)))
+
+        for component in self.components:
+            label_info = component.get_label_render_info(grid_size, offset)
+            if label_info is None:
+                continue
+
+            text = label_info['text']
+            base_x = label_info['base_x']
+            base_y = label_info['base_y']
+            position = label_info['position']
+
+            # Render text
+            text_surface = label_font.render(text, True, label_color)
+            text_rect = text_surface.get_rect()
+
+            # Position label based on specified location
+            padding = 5
+            offset_distance = int(grid_size * 0.6)
+
+            if position == "above":
+                text_rect.midbottom = (base_x, base_y - offset_distance)
+            elif position == "below":
+                text_rect.midtop = (base_x, base_y + offset_distance)
+            elif position == "left":
+                text_rect.midright = (base_x - offset_distance, base_y)
+            elif position == "right":
+                text_rect.midleft = (base_x + offset_distance, base_y)
+
+            # Draw background
+            bg_rect = text_rect.inflate(padding * 2, padding)
+            bg_surface = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
+            bg_surface.fill(label_bg_color)
+            surface.blit(bg_surface, bg_rect)
+
+            # Draw text
+            surface.blit(text_surface, text_rect)
 
     def run(self):
         """Main application loop."""

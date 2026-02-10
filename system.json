@@ -16,7 +16,9 @@
           "percent": 100,
           "fill_rate": 5
         }
-      ]
+      ],
+      "label_text": "T-101",
+      "label_position": "right"
     },
     {
       "type": "tank",
@@ -34,7 +36,9 @@
           "percent": 100,
           "drain_rate": 3
         }
-      ]
+      ],
+      "label_text": "T-102",
+      "label_position": "below"
     },
     {
       "type": "tank",
@@ -71,7 +75,8 @@
       "state": "running",
       "color": [100, 100, 120],
       "rotation": 0,
-      "diameter": 10
+      "diameter": 10,
+      "label_text": "P-101"
     },
     {
       "type": "pump",
@@ -104,7 +109,9 @@
       "state": "open",
       "color": [100, 150, 100],
       "rotation": 0,
-      "diameter": 10
+      "diameter": 10,
+      "label_text": "V-101",
+      "label_position": "below"
     },
     {
       "type": "valve",
@@ -453,7 +460,9 @@
       "sensor_type": "flow_meter",
       "color": [100, 150, 200],
       "rotation": 0,
-      "diameter": 15
+      "diameter": 15,
+      "label_text": "FI-101",
+      "label_position": "left"
     },
     {
       "type": "sensor",
@@ -487,7 +496,7 @@
       "id": "sensor_custom",
       "position": [15, 23],
       "sensor_type": "custom",
-      "label": "pH",
+      "sensor_label": "pH",
       "color": [150, 100, 200],
       "rotation": 0,
       "diameter": 15

@@ -181,6 +181,7 @@ class FourWayValve(Component):
             "rotation": self.rotation,
             "diameter": self.diameter
         }
+        self._add_label_to_dict(data)
         return self._add_animation_to_dict(data)
 
     @classmethod
@@ -194,6 +195,7 @@ class FourWayValve(Component):
             rotation=data.get("rotation", 0),
             diameter=data.get("diameter", 20)
         )
+        component._load_label_from_dict(data)
         if 'animation' in data:
             component.set_animation(data['animation'])
         return component

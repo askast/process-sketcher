@@ -243,6 +243,7 @@ class Tank(Component):
             "fill_percent": self.initial_fill_percent,
             "wall_thickness": self.wall_thickness
         }
+        self._add_label_to_dict(data)
         return self._add_animation_to_dict(data)
 
     @classmethod
@@ -259,6 +260,7 @@ class Tank(Component):
             component_id=data.get("id"),
             wall_thickness=data.get("wall_thickness", 3)
         )
+        component._load_label_from_dict(data)
         if 'animation' in data:
             component.set_animation(data['animation'])
         return component

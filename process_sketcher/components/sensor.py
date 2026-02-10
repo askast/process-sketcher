@@ -26,7 +26,7 @@ class Sensor(Component):
         self,
         position: Tuple[int, int],
         sensor_type: str = "flow_meter",
-        label: str = None,
+        sensor_label: str = None,
         color: Tuple[int, int, int] = (100, 150, 200),
         component_id: str = None,
         rotation: int = 0,
@@ -38,7 +38,7 @@ class Sensor(Component):
         Args:
             position: Grid position (x, y)
             sensor_type: Type of sensor (flow_meter, thermocouple, pressure, level, etc.)
-            label: Custom label override (if None, uses sensor_type abbreviation)
+            sensor_label: Custom label override for circle (if None, uses sensor_type abbreviation)
             color: RGB color tuple
             component_id: Optional unique identifier
             rotation: Rotation angle in degrees (0, 90, 180, 270)
@@ -46,7 +46,7 @@ class Sensor(Component):
         """
         super().__init__(position, component_id)
         self.sensor_type = sensor_type
-        self.label = label if label else self.SENSOR_TYPES.get(sensor_type, sensor_type[:2].upper())
+        self.sensor_label = sensor_label if sensor_label else self.SENSOR_TYPES.get(sensor_type, sensor_type[:2].upper())
         self.color = color
         self.rotation = rotation
         self.diameter = diameter
@@ -137,7 +137,7 @@ class Sensor(Component):
         pygame.draw.circle(temp_surface, border_color, circle_center, circle_radius, 2)
 
         # Draw the sensor type label in the circle
-        self._draw_label(temp_surface, circle_center, circle_radius, zoom)
+        self._draw_sensor_label(temp_surface, circle_center, circle_radius, zoom)
 
         # Rotate the surface
         rotated_surface = pygame.transform.rotate(temp_surface, -self.rotation)
@@ -145,10 +145,10 @@ class Sensor(Component):
 
         surface.blit(rotated_surface, rotated_rect)
 
-    def _draw_label(self, surface, center: Tuple[int, int], radius: int, zoom: float):
+    def _draw_sensor_label(self, surface, center: Tuple[int, int], radius: int, zoom: float):
         """Draw the sensor type label in the circle."""
         # Calculate font size based on radius and label length
-        font_size = max(8, int(radius * 1.2 / max(1, len(self.label) * 0.5)))
+        font_size = max(8, int(radius * 1.2 / max(1, len(self.sensor_label) * 0.5)))
 
         try:
             font = pygame.font.SysFont("Arial", font_size, bold=True)
@@ -157,7 +157,7 @@ class Sensor(Component):
 
         # Render text
         text_color = (255, 255, 255)
-        text_surface = font.render(self.label, True, text_color)
+        text_surface = font.render(self.sensor_label, True, text_color)
         text_rect = text_surface.get_rect(center=center)
 
         surface.blit(text_surface, text_rect)
@@ -169,11 +169,12 @@ class Sensor(Component):
             "id": self.id,
             "position": list(self.position),
             "sensor_type": self.sensor_type,
-            "label": self.label,
+            "sensor_label": self.sensor_label,
             "color": list(self.color),
             "rotation": self.rotation,
             "diameter": self.diameter
         }
+        self._add_label_to_dict(data)
         return self._add_animation_to_dict(data)
 
     @classmethod
@@ -182,12 +183,13 @@ class Sensor(Component):
         component = cls(
             position=tuple(data["position"]),
             sensor_type=data.get("sensor_type", "flow_meter"),
-            label=data.get("label"),
+            sensor_label=data.get("sensor_label"),
             color=tuple(data.get("color", [100, 150, 200])),
             component_id=data.get("id"),
             rotation=data.get("rotation", 0),
             diameter=data.get("diameter", 20)
         )
+        component._load_label_from_dict(data)
         if 'animation' in data:
             component.set_animation(data['animation'])
         return component

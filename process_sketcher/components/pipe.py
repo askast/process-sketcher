@@ -9,6 +9,8 @@ from .base import Component
 class Pipe(Component):
     """A pipe component that carries fluid with visualized flow direction."""
 
+    _default_show_label = False  # Pipes don't show labels by default
+
     def __init__(
         self,
         position: Tuple[int, int],
@@ -229,6 +231,7 @@ class Pipe(Component):
             "trim_start": self.trim_start,
             "trim_end": self.trim_end
         }
+        self._add_label_to_dict(data)
         return self._add_animation_to_dict(data)
 
     @classmethod
@@ -245,6 +248,7 @@ class Pipe(Component):
             trim_start=data.get("trim_start", False),
             trim_end=data.get("trim_end", False)
         )
+        component._load_label_from_dict(data)
         if 'animation' in data:
             component.set_animation(data['animation'])
         return component

@@ -9,6 +9,8 @@ from .base import Component
 class Elbow(Component):
     """An elbow piece for joining pipes at different angles."""
 
+    _default_show_label = False  # Elbows don't show labels by default
+
     def __init__(
         self,
         position: Tuple[int, int],
@@ -158,6 +160,7 @@ class Elbow(Component):
             "rotation": self.rotation,
             "diameter": self.diameter
         }
+        self._add_label_to_dict(data)
         return self._add_animation_to_dict(data)
 
     @classmethod
@@ -172,6 +175,7 @@ class Elbow(Component):
             rotation=data.get("rotation", 270),
             diameter=data.get("diameter", 20)
         )
+        component._load_label_from_dict(data)
         if 'animation' in data:
             component.set_animation(data['animation'])
         return component
