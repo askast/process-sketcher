@@ -8,5 +8,6 @@ from .tee import Tee
 from .valve import Valve
 from .pump import Pump
 from .three_way_valve import ThreeWayValve
+from .four_way_valve import FourWayValve
 
-__all__ = ["Component", "Pipe", "Elbow", "Tank", "Tee", "Valve", "Pump", "ThreeWayValve"]
+__all__ = ["Component", "Pipe", "Elbow", "Tank", "Tee", "Valve", "Pump", "ThreeWayValve", "FourWayValve"]

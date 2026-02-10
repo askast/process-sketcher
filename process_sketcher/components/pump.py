@@ -51,13 +51,12 @@ class Pump(Component):
         pump_body_diameter = int(pipe_width * 2.5)
 
         # Create a surface for the pump that we can rotate
-        pump_width = int(pipe_width * 4)
-        pump_height = int(pipe_width * 4)
-        temp_surface = pygame.Surface((pump_width, pump_height), pygame.SRCALPHA)
+        pump_size = int(pipe_width * 4)
+        temp_surface = pygame.Surface((pump_size, pump_size), pygame.SRCALPHA)
 
         # Center of the temporary surface
-        surf_center_x = pump_width // 2
-        surf_center_y = pump_height // 2
+        surf_center_x = pump_size // 2
+        surf_center_y = pump_size // 2
 
         # Build pump body as polygon with curved top/bottom and straight pipe connections
         points_top = []

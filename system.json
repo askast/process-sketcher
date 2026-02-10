@@ -308,7 +308,7 @@
       "diameter": 10,
       "animation": [
         {"duration": 3, "flow_direction": "forward"},
-        {"duration": 3, "flow_direction": "reversed"}
+        {"duration": 3, "flow_direction": "backward"}
       ]
     },
 
@@ -385,6 +385,65 @@
       "color": [150, 150, 100],
       "rotation": 90,
       "diameter": 15
+    },
+    {
+      "type": "four_way_valve",
+      "id": "four_way_closed",
+      "position": [9, 20],
+      "state": "closed",
+      "color": [150, 100, 100],
+      "rotation": 0,
+      "diameter": 12
+    },
+    {
+      "type": "four_way_valve",
+      "id": "four_way_animated",
+      "position": [14, 20],
+      "state": "open",
+      "color": [100, 100, 150],
+      "rotation": 0,
+      "diameter": 12,
+      "animation": [
+        {"duration": 2, "state": "open"},
+        {"duration": 2, "state": "closed"}
+      ]
+    },
+    {
+      "type": "four_way_valve",
+      "id": "four_way_rotated",
+      "position": [19, 20],
+      "state": "open",
+      "color": [150, 150, 100],
+      "rotation": 90,
+      "diameter": 12
+    },
+    {
+      "type": "pipe",
+      "id": "pipe_1",
+      "position": [4, 18],
+      "end_position": [4, 22],
+      "color": [100, 150, 255],
+      "flow_direction": "forward",
+      "diameter": 10
+    },
+    {
+      "type": "pipe",
+      "id": "pipe_2",
+      "position": [5, 18],
+      "end_position": [5, 22],
+      "color": [200, 100, 50],
+      "flow_direction": "backward",
+      "diameter": 10
+    },
+
+    {
+      "type": "four_way_valve",
+      "id": "four_way_open",
+      "position": [4, 20],
+      "state": "open",
+      "color": [100, 150, 100],
+      "rotation": 0,
+      "diameter": 12
     }
   ]
 }

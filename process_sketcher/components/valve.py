@@ -53,14 +53,13 @@ class Valve(Component):
         valve_body_diameter = int(pipe_width * 1.5)
 
         # Create a surface for the elbow that we can rotate
-        valve_width = int(pipe_width*2.5)
-        valve_height= int(pipe_width*3.5)
-        temp_surface = pygame.Surface((valve_width, valve_height), pygame.SRCALPHA)
+        valve_size = int(pipe_width*4)
+        temp_surface = pygame.Surface((valve_size, valve_size), pygame.SRCALPHA)
 
         # We want the inner corner of the elbow to be at the surface center
         # This way, after rotation, the inner corner will be at the node position
-        surf_center_x = valve_width // 2
-        surf_center_y = valve_height-(valve_body_diameter*1.18)
+        surf_center_x = valve_size * 0.5
+        surf_center_y = valve_size * 0.5
 
         points_top_right = []
         points_top_left = []

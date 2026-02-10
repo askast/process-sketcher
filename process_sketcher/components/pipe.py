@@ -105,8 +105,8 @@ class Pipe(Component):
 
         angle = math.atan2(dy, dx)
 
-        # Reverse angle if flow is backward
-        if self.flow_direction == "backward":
+        # Reverse angle if flow is backward/reversed
+        if self.flow_direction in ("backward", "reversed"):
             angle += math.pi
 
         # Arrow properties
@@ -122,12 +122,14 @@ class Pipe(Component):
         for i in range(num_arrows):
             # Calculate arrow position along the pipe
             # For forward flow: arrows move from start to end
-            # For backward flow: arrows move from end to start (reverse offset)
+            # For backward/reversed flow: arrows move from end to start (reverse offset)
             if self.flow_direction == "forward":
                 distance = i * arrow_spacing + anim_offset
-            else:
+            elif self.flow_direction in ("backward", "reversed"):
                 # Reverse animation direction for backward flow
                 distance = i * arrow_spacing + (arrow_spacing - anim_offset)
+            else:
+                distance = i * arrow_spacing + anim_offset
 
             if distance < 0 or distance > length:
                 continue
