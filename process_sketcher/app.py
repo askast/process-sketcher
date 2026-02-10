@@ -944,15 +944,34 @@ class ProcessSketcherApp:
         width, height = surface.get_size()
         cell_size = self.grid.cell_size * self.viz_zoom
 
-        # Draw vertical lines
+        # Faint color for grid numbers
+        number_color = (60, 60, 65)
+
+        # Calculate the grid coordinate of the first visible line
+        first_grid_x = -int(offset[0] // cell_size)
+        first_grid_y = -int(offset[1] // cell_size)
+
+        # Draw vertical lines with numbers
         start_x = int(offset[0] % cell_size)
+        grid_x = first_grid_x
         for x in range(start_x, width, int(cell_size)):
             pygame.draw.line(surface, self.grid.grid_color, (x, 0), (x, height), 1)
+            # Draw grid number at top
+            if cell_size >= 20:  # Only show numbers if cells are large enough
+                num_text = self.small_font.render(str(grid_x), True, number_color)
+                surface.blit(num_text, (x + 2, 2))
+            grid_x += 1
 
-        # Draw horizontal lines
+        # Draw horizontal lines with numbers
         start_y = int(offset[1] % cell_size)
+        grid_y = first_grid_y
         for y in range(start_y, height, int(cell_size)):
             pygame.draw.line(surface, self.grid.grid_color, (0, y), (width, y), 1)
+            # Draw grid number at left
+            if cell_size >= 20:  # Only show numbers if cells are large enough
+                num_text = self.small_font.render(str(grid_y), True, number_color)
+                surface.blit(num_text, (2, y + 2))
+            grid_y += 1
 
     def run(self):
         """Main application loop."""
