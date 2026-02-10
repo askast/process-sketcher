@@ -2,7 +2,7 @@
 
 import json
 from typing import List, Any
-from .components import Component, Pipe, Elbow, Tank, Tee, Valve, Pump, ThreeWayValve, FourWayValve
+from .components import Component, Pipe, Elbow, Tank, Tee, Valve, Pump, ThreeWayValve, FourWayValve, Sensor
 
 
 class JSONLoader:
@@ -126,6 +126,8 @@ class JSONLoader:
             return ThreeWayValve.from_dict(data)
         elif comp_type == "four_way_valve":
             return FourWayValve.from_dict(data)
+        elif comp_type == "sensor":
+            return Sensor.from_dict(data)
         else:
             raise ValueError(f"Unknown component type: {comp_type}")
 

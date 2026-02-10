@@ -444,6 +444,62 @@
       "color": [100, 150, 100],
       "rotation": 0,
       "diameter": 12
+    },
+
+    {
+      "type": "sensor",
+      "id": "sensor_flow",
+      "position": [3, 23],
+      "sensor_type": "flow_meter",
+      "color": [100, 150, 200],
+      "rotation": 0,
+      "diameter": 15
+    },
+    {
+      "type": "sensor",
+      "id": "sensor_temp",
+      "position": [6, 23],
+      "sensor_type": "thermocouple",
+      "color": [200, 100, 100],
+      "rotation": 0,
+      "diameter": 15
+    },
+    {
+      "type": "sensor",
+      "id": "sensor_pressure",
+      "position": [9, 23],
+      "sensor_type": "pressure",
+      "color": [100, 200, 100],
+      "rotation": 0,
+      "diameter": 15
+    },
+    {
+      "type": "sensor",
+      "id": "sensor_level",
+      "position": [12, 23],
+      "sensor_type": "level",
+      "color": [200, 150, 100],
+      "rotation": 0,
+      "diameter": 15
+    },
+    {
+      "type": "sensor",
+      "id": "sensor_custom",
+      "position": [15, 23],
+      "sensor_type": "custom",
+      "label": "pH",
+      "color": [150, 100, 200],
+      "rotation": 0,
+      "diameter": 15
+    },
+    {
+      "type": "sensor",
+      "id": "sensor_rotated",
+      "position": [18, 23],
+      "sensor_type": "flow_meter",
+      "color": [100, 150, 200],
+      "rotation": 90,
+      "diameter": 15
     }
   ]
 }
